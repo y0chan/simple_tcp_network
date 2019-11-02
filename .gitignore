@@ -4,5 +4,6 @@ myeth_sample/
 ## memo
 memo.md
 
-## .vagrant
+## .vagrant file
 .vagrant
+myeth/myeth-*/.vagrant

@@ -8,11 +8,18 @@ Vagrant.configure("2") do |config|
 	config.vm.define :target do | target |
 		target.vm.hostname = "target"
 		target.vm.network :private_network, ip: "192.168.111.2", virtualbox__intnet: "mynet"
+		target.vm.provision "shell", inline: <<-SHELL
+			echo 1 >/proc/sys/net/ipv4/ip_forward
+		SHELL
 	end
 
 	config.vm.define :myeth do | myeth |
 		myeth.vm.hostname = "myeth"
 		myeth.vm.network :private_network, ip: "192.168.111.100", virtualbox__intnet: "mynet"
-		config.vm.synced_folder "./myeth", "/code"
+		myeth.vm.synced_folder "./myeth_code", "/code"
+		myeth.vm.provision "shell", inline: <<-SHELL
+			ip route del default
+			ip route add default via 192.168.111.2 dev eth1	
+		SHELL
 	end
 end
